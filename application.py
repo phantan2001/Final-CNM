@@ -30,12 +30,12 @@ application.jinja_env.filters["usd"] = usd
 
 # Configure Redis for storing the session data locally on the server-side
 application.secret_key = 'BAD_SECRET_KEY'
-application.config['SESSION_TYPE'] = 'redis'
-application.config['SESSION_PERMANENT'] = False
-application.config['SESSION_USE_SIGNER'] = True
-application.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
+# application.config['SESSION_TYPE'] = 'redis'
+# application.config['SESSION_PERMANENT'] = False
+# application.config['SESSION_USE_SIGNER'] = True
+# application.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
 # Create and initialize the Flask-Session object AFTER `app` has been configured
-server_session = Session(application)
+# server_session = Session(application)
 
 # Configure Flask to use local SQLite3 database with SQLAlchemy
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'finances.db')
@@ -116,8 +116,9 @@ portfolio_schema = PortfolioSchema(many=True)
 bought_schema = BoughtSchema(many=True)
 sold_schema = SoldSchema(many=True)
 
+db.create_all()
 # Make sure API key is set
-os.environ.get("API_KEY")
+# print(os.environ)
 
 if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
@@ -311,7 +312,7 @@ def history():
 @application.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
+    
     # Forget any user_id
     session.clear()
 
@@ -389,7 +390,7 @@ def register():
     else:
         # Obtain username inputted
         username = request.form.get("username")
-
+        print(username)
         # User error handling: stop empty username and password fields, stop usernames already taken, stop non-matching passwords
         if not username:
             return errorPage(title="No Data", info = "Please enter a username", file = "no-data.svg")
@@ -535,4 +536,5 @@ def page_not_found(e):
 # Run Server
 # Run the following in the command line: python application.py
 if __name__ == '__main__':
-    application.run(host='0.0.0.0')
+    application.run(host='0.0.0.0' )
+    application.config['SESSION_TYPE'] = 'filesystem'
