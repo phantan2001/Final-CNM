@@ -122,7 +122,7 @@ os.environ['API_KEY'] = 'pk_b1a6fb10014b4c889d1c8499547be9f3'
 api_key = os.environ.get("API_KEY")
 
 
-if not os.environ.get("API_KEY"):
+if not api_key:
     raise RuntimeError("API_KEY not set")
 
 @application.route("/")
