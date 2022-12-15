@@ -111,16 +111,18 @@ class SoldSchema(ma.Schema):
         fields = ('time', 'symbol', 'shares_sold', 'price_sold')
         
 # Initialize Schemas
+db.create_all()
 users_schema = UsersSchema
 portfolio_schema = PortfolioSchema(many=True)
 bought_schema = BoughtSchema(many=True)
 sold_schema = SoldSchema(many=True)
 
-db.create_all()
 # Make sure API key is set
 # print(os.environ)
+os.environ['API_KEY'] = "pk_26522acfab0d4c67b9d042826ea852e3"
+api_key  = os.environ.get("API_KEY")
 
-if not os.environ.get("API_KEY"):
+if not api_key:
     raise RuntimeError("API_KEY not set")
 
 @application.route("/")

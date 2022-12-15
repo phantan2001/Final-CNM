@@ -17,12 +17,12 @@
     <div id="overview" class="mx-3">
         <!-- <h2>OVERVIEW</h2> -->
         <div class="row mt-3">
-            <div class="col-3">
+            <div class="col-3 logo">
                 <img src="{{data.logo.url}}" alt="">
             </div>
-            <div class="col-9">
+            <div class="col-9 content">
                 <!-- <h5>Company</h5> -->
-                <h3>{{data.company_info.companyName}}</h3>  
+                <h2>{{data.company_info.companyName}}</h2>  
                 <!-- <h5>Industry</h5> -->
                 <h4>{{data.company_info.industry}}</h4>  
                 <h5>Description</h5>
@@ -32,39 +32,56 @@
             </div>
         </div>
     </div>
-    <div id="quote" class="mx-3 ">
+    <div id="quote" class="mx-3">
         <div class="row mt-3">
-            <h5>Symbol</h5> <br>
-            <p>{{data.quote.symbol}}</p><br>
-            <h5>Primary Exchange</h5> <br>
-            <p>{{data.quote.primaryExchange}}</p><br>
-            <h5>High</h5> <br>
-            <p>{{data.quote.high}}</p><br>
-            <h5>Low</h5> <br>
-            <p>{{data.quote.low}}</p><br>
-            <h5>Latest Price</h5> <br>
-            <p>{{data.quote.latestPrice}}</p><br>
-            <h5>peRatio</h5> <br>
-            <p>{{data.quote.peRatio}}</p><br>
-            <h5>week52High</h5> <br>
-            <p>{{data.quote.week52High}}</p><br>
-            <h5>week52Low</h5> <br>
-            <p>{{data.quote.week52Low}}</p><br>
-            <h5>currency</h5> <br>
-            <p>{{data.quote.currency}}</p><br>
-
-
+            <div class="column quote">
+                <h5>Symbol</h5> 
+                <p>{{data.quote.symbol}}</p>
+            </div>
+            <div class="column quote">
+                <h5>Primary Exchange</h5> 
+                <p>{{data.quote.primaryExchange}}</p>
+            </div>
+            <div class="column quote">
+                <h5>High</h5> 
+                <p class="high">{{data.quote.high}}</p>
+            </div>
+            <div class="column quote">
+                <h5>Low</h5> 
+                <p class="low">{{data.quote.low}}</p>
+            </div>
+            <div class="column quote">
+                <h5>Latest Price</h5> 
+                <p>{{data.quote.latestPrice}}</p>
+            </div>
+            <div class="column quote">
+                <h5>peRatio</h5> 
+                <p>{{data.quote.peRatio}}</p>
+            </div>
+            <div class="column quote">
+                <h5>week52High</h5> 
+                <p>{{data.quote.week52High}}</p>
+            </div>
+            <div class="column quote">
+                <h5>week52Low</h5> 
+                <p>{{data.quote.week52Low}}</p>
+            </div>
+            <div class="column quote">
+                <h5>currency</h5> 
+                <p>{{data.quote.currency}}</p>
+            </div>
+            
         </div>
     </div>
     <div id="news" class="mx-3 ">
-        <div class="row mt-3">
+        <div class="row mt-3 news">
             {% for article in data.company_news %}
-            <h5>{{article.headline}}</h5><br>
-            <p>Posted by {{article.source}} </p><br>
-            <p>{{article.url}}</p><br>
-            <p>{{article.summary}}</p><br>
-            <p>{{article.image}}</p><br>
-            <br>
+            <div class="line"></div>
+            <h5>{{article.headline}}</h5>
+            <p class="postby">Posted by {{article.source}}</p>
+            <a href="{{article.url}}">Xem chi tiết</a>
+            <p class="summary">{{article.summary}}</p>
+            <img src="{{article.image}}" alt="" class="image">
         {% endfor %}
         </div>
     </div>
