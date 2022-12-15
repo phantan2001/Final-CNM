@@ -8,7 +8,7 @@ from flask_marshmallow import Marshmallow
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import errorPage, login_required, lookup, usd
+from helpers import errorPage, login_required, lookup, lookup2 ,usd
 
 # Configure application
 application = Flask(__name__)
@@ -374,7 +374,8 @@ def quote():
         return render_template("quote.html")
     else:
         symbol = request.form.get("symbol")
-        data = lookup(symbol)
+        data = lookup2(symbol)
+        print(data)
         # User error handling: stop empty symbol and shares fields, stop invalid symbols, and negative share numbers
         if not symbol:
             return errorPage(title="No Data", info = "Please enter a stock symbol, i.e. AMZN", file = "no-data.svg")

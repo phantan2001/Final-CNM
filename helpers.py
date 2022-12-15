@@ -45,7 +45,29 @@ def lookup(symbol):
         }
     except (KeyError, TypeError, ValueError):
         return None
+def lookup2(symbol):
+    api_key = os.environ.get("API_KEY")
+    try:
+        logo = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/logo?token={api_key}")
+        company_info = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/company?token={api_key}")
+        stats = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/stats?token={api_key}")
+        company_news = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/news/last/20?token={api_key}")
+        quote = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}")
 
+        dividends = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/dividends/5y?token={api_key}")
+        # institutional = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/institutional-ownership?token={api_key}")
+        # insider_transactions = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/insider-transactions?token={api_key}")
+    except requests.RequestException:
+        return None
+    # return logo.json()
+    return {
+    "logo" : logo.json(),
+    "company_info" : company_info.json(),
+    "stats" : stats.json(),
+    "company_news" : company_news.json(),
+    "quote" : quote.json(),
+    "dividends" : dividends.json(),
+    }
 
 def usd(value):
     """Format value as USD."""

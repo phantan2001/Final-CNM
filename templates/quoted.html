@@ -6,6 +6,101 @@
 
 {% block main %}
     <!-- Demonstrating different methods of displaying data -->
-    <div>{{ data.name }}</div>
-    <div>{{ data.price }}</div>
+    
+    <select class="form-select mt-5" id="view-select" aria-label="View select">
+        <option value="overview"selected>Overview</option>
+        <option value="quote">Quote</option>
+        <option value="news">News</option>
+        <option value="dividends">Dividends</option>
+
+    </select>
+    <div id="overview" class="mx-3">
+        <!-- <h2>OVERVIEW</h2> -->
+        <div class="row mt-3">
+            <div class="col-3">
+                <img src="{{data.logo.url}}" alt="">
+            </div>
+            <div class="col-9">
+                <!-- <h5>Company</h5> -->
+                <h3>{{data.company_info.companyName}}</h3>  
+                <!-- <h5>Industry</h5> -->
+                <h4>{{data.company_info.industry}}</h4>  
+                <h5>Description</h5>
+                <p>{{data.company_info.description}}</p>      
+                <h5>CEO</h5>
+                <p>{{data.company_info.CEO}}</p>   
+            </div>
+        </div>
+    </div>
+    <div id="quote" class="mx-3 ">
+        <div class="row mt-3">
+            <h5>Symbol</h5> <br>
+            <p>{{data.quote.symbol}}</p><br>
+            <h5>Primary Exchange</h5> <br>
+            <p>{{data.quote.primaryExchange}}</p><br>
+            <h5>High</h5> <br>
+            <p>{{data.quote.high}}</p><br>
+            <h5>Low</h5> <br>
+            <p>{{data.quote.low}}</p><br>
+            <h5>Latest Price</h5> <br>
+            <p>{{data.quote.latestPrice}}</p><br>
+            <h5>peRatio</h5> <br>
+            <p>{{data.quote.peRatio}}</p><br>
+            <h5>week52High</h5> <br>
+            <p>{{data.quote.week52High}}</p><br>
+            <h5>week52Low</h5> <br>
+            <p>{{data.quote.week52Low}}</p><br>
+            <h5>currency</h5> <br>
+            <p>{{data.quote.currency}}</p><br>
+
+
+        </div>
+    </div>
+    <div id="news" class="mx-3 ">
+        <div class="row mt-3">
+            {% for article in data.company_news %}
+            <h5>{{article.headline}}</h5><br>
+            <p>Posted by {{article.source}} </p><br>
+            <p>{{article.url}}</p><br>
+            <p>{{article.summary}}</p><br>
+            <p>{{article.image}}</p><br>
+            <br>
+        {% endfor %}
+        </div>
+    </div>
+    
+    <div id="dividends" class="mx-3 ">
+        <div class="row mt-3">
+            {% for divi in data.dividends %}
+            <h5>{{divi.id}} ({{divi.key}} | Symbol : {{divi.symbol}})</h5><br>
+            <p>Amount : {{divi.amount}} </p><br>
+            <p>Currency : {{divi.currency}}</p><br>
+            <p>Description: {{divi.description}}</p><br>
+            <p>Exchange Date: {{divi.exDate}}</p><br>
+            <p>Flag : {{divi.flag}}</p><br>
+            <p>Payment Date : {{divi.paymentDate}}</p><br>
+
+            <br>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-5"> </div>
+    <script>
+        var view_list = ["overview" , "news" , "dividends" , "quote"];
+        function hideAll(){
+            for(let i =0 ; i < view_list.length ; i++){
+                    let id = '#' + view_list[i];
+                    $(id).addClass('d-none').removeClass('d-block');
+            }
+        }
+        hideAll();
+        $('#overview').addClass('d-block');
+
+        $('#view-select').on('change' ,function(){
+            hideAll();
+            let id = '#' + this.value;
+            $(id).addClass('d-block').removeClass('d-none');
+        })
+    </script>
 {% endblock %}
