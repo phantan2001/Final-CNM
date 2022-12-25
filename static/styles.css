@@ -286,3 +286,84 @@ h1 {
 .container .quote {
     margin-top: 100px;
 }
+.select-stock {
+    display: flex;
+    flex-direction: column;
+}
+.select-stock label {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* select option */
+#view-select {
+    padding: 8px 8px;
+    border: 1px solid #fff;
+    outline: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: rgb(24, 108, 218);
+    color: white;
+}
+#view-select:focus {
+    border: none;
+    outline: none;
+}
+#view-select option {
+    margin: 0;
+}
+#overview {
+    margin: 0 auto;
+    max-width: 80vw;
+}
+/* dividends */
+#dividends .detail-dividends{
+    display: flex;
+    flex-direction: column;
+}
+.item-dividends li{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    border: 1px solid rgb(152, 156, 153);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 5px 15px;
+}
+.item-dividends li:hover {
+    background-color: #495057;
+    color: #fff;
+    transition: all 0.3s linear;
+    
+}
+.item-dividends li label {
+    font-size: 20px;
+    font-weight: 500;
+}
+.item-dividends li span {
+    font-size: 16px;
+    font-weight: 500;
+    font-style: italic;
+    color: rgb(121, 118, 118);
+}
+
+.item-dividends {
+    padding: 0 !important;
+}
+.block-dividend {
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    margin: 15px auto;
+    padding: 30px 30px;
+    background-color: rgba(204, 215, 215, 0.66);
+}
+.block-dividend h5 {
+    font-size: 24px;
+    font-weight: 500;
+}

@@ -12,9 +12,8 @@
         <option value="quote">Quote</option>
         <option value="news">News</option>
         <option value="dividends">Dividends</option>
-
     </select>
-    <div id="overview" class="mx-3">
+    <div id="overview" class="container mx-3">
         <!-- <h2>OVERVIEW</h2> -->
         <div class="row mt-3">
             <div class="col-3 logo">
@@ -87,17 +86,37 @@
     </div>
     
     <div id="dividends" class="mx-3 ">
-        <div class="row mt-3">
+        <div class="row mt-3 detail-dividends">
             {% for divi in data.dividends %}
-            <h5>{{divi.id}} ({{divi.key}} | Symbol : {{divi.symbol}})</h5><br>
-            <p>Amount : {{divi.amount}} </p><br>
-            <p>Currency : {{divi.currency}}</p><br>
-            <p>Description: {{divi.description}}</p><br>
-            <p>Exchange Date: {{divi.exDate}}</p><br>
-            <p>Flag : {{divi.flag}}</p><br>
-            <p>Payment Date : {{divi.paymentDate}}</p><br>
-
-            <br>
+            <div class="block-dividend">
+                <h5>{{divi.id}} ({{divi.key}} | Symbol : {{divi.symbol}})</h5>
+                <ul class="item-dividends">
+                    <li>
+                        <label>Amount</label>
+                        <span>{{divi.amount}}</span>
+                    </li>
+                    <li>
+                        <label>Currency</label>
+                        <span>{{divi.currency}}</span>
+                    </li>
+                    <li>
+                        <label>Description</label>
+                        <span>{{divi.description}}</span>
+                    </li>
+                    <li>
+                        <label>Exchange Date</label>
+                        <span>{{divi.exDate}}</span>
+                    </li>
+                    <li>
+                        <label>Flag</label>
+                        <span>{{divi.flag}}</span>
+                    </li>
+                    <li>
+                        <label>Payment Date</label>
+                        <span>{{divi.paymentDate}}</span>
+                    </li>
+                </ul>
+            </div>
         {% endfor %}
         </div>
     </div>
