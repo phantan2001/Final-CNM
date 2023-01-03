@@ -38,9 +38,12 @@ application.secret_key = 'BAD_SECRET_KEY'
 # server_session = Session(application)
 
 # Configure Flask to use local SQLite3 database with SQLAlchemy
-application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'finances.db')
+application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:truong@host.docker.internal:33060/cnm'
+# application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:truong@127.0.0.1:33060/cnm'
+
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 application.config['SQLALCHEMY_ECHO'] = True
+print(application.config['SQLALCHEMY_DATABASE_URI'])
 db = SQLAlchemy(application)
 
 # Configure marshmallow
@@ -95,6 +98,14 @@ class Sold(db.Model):
         self.symbol = symbol
         self.shares_sold = shares_sold
         self.price_sold = price_sold
+class CashHistory(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer)
+    cash = db.Column(db.Float)
+    def __init__(self, user_id, cash):
+        self.user_id = user_id
+        self.cash = cash
+        
 
 # Create Schemas (only include data you want to show)
 class UsersSchema(ma.Schema):
@@ -109,13 +120,17 @@ class BoughtSchema(ma.Schema):
 class SoldSchema(ma.Schema):
     class Meta:
         fields = ('time', 'symbol', 'shares_sold', 'price_sold')
-        
+class CashHistorySchema(ma.Schema):
+    class Meta:
+        fields = ('user_id', 'cash')
+
 # Initialize Schemas
-db.create_all()
+# db.create_all()
 users_schema = UsersSchema
 portfolio_schema = PortfolioSchema(many=True)
 bought_schema = BoughtSchema(many=True)
 sold_schema = SoldSchema(many=True)
+cashhistory_schema = CashHistorySchema(many=True)
 
 # Make sure API key is set
 # print(os.environ)
@@ -186,7 +201,7 @@ def index():
         print("total:", total)
         # Calculate grand total value of all assets
         grand_total = sum(total) + available
-
+        
         # Render page with information
         return render_template("index.html", symbol_list = symbol_list, symbol_list_length = symbol_list_length, shares = shares, price = price, total = total, available = usd(available), grand_total = usd(grand_total))
 
@@ -242,6 +257,10 @@ def buy():
         # Update cash field in Users Table and create entry into Bought Table
         update_cash = Users.query.filter_by(id = user).first()
         update_cash.cash = remaining
+
+        ch = CashHistory(user, remaining)
+        db.session.add(ch)
+
         db.session.commit()
         #"UPDATE users SET cash = :remaining WHERE id = :id", remaining = remaining, id = user)
 
@@ -291,11 +310,11 @@ def history():
     bought_list = Bought.query.filter_by(buyer_id = user).all()
     print("bought_list:", bought_list)
     #("SELECT time, symbol, shares_bought, price_bought FROM bought WHERE buyer_id = :id", id = user)
-
+    cash_history = CashHistory.query.filter_by(user_id = user).all()
     # If user didn't sell stocks, only query bought table, if didn't buy anything, return empty
     if bought_list == []:
         # Will return empty list if user didn't buy anything
-        return render_template("history.html", bought_list_length = 0, bought_list = [], sold_list_length = 0, sold_list = [])
+        return render_template("history.html", bought_list_length = 0, bought_list = [], sold_list_length = 0, sold_list = [] , cash_history = cash_history)
         
     # Else query sold table
     else:
@@ -308,7 +327,7 @@ def history():
         bought_list_length = len(bought_list)
         sold_list_length = len(sold_list)
 
-        return render_template("history.html", bought_list = bought_list, sold_list = sold_list, bought_list_length = bought_list_length, sold_list_length = sold_list_length)
+        return render_template("history.html", bought_list = bought_list, sold_list = sold_list, bought_list_length = bought_list_length, sold_list_length = sold_list_length , cash_history = cash_history)
 
 
 @application.route("/login", methods=["GET", "POST"])
@@ -416,6 +435,7 @@ def register():
         cash = 10000
 
         # Add and commit the data into database
+        
         db.session.add(Users(username, hashed, cash))
         db.session.commit()
         #("INSERT INTO users (username, hash) VALUES (:username, :hash)", username=username, hash=hashed)
@@ -423,6 +443,8 @@ def register():
         # Automatically sign in after creating account
         rows = Users.query.filter_by(username=request.form.get("username")).first()
         session["user_id"] = rows.id
+        db.session.add(CashHistory(session["user_id"] , cash))
+        db.session.commit()
 
         # Redirect user to home page
         return redirect("/home")
@@ -503,6 +525,10 @@ def sell():
         # Update cash field in Users Table
         update_cash = Users.query.filter_by(id = user).first()
         update_cash.cash = total
+
+        ch = CashHistory(user , total)
+        db.session.add(ch)
+
         db.session.commit()
         #("UPDATE users SET cash = :total WHERE id = :id", total = total, id = user)
 

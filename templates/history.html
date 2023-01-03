@@ -5,9 +5,70 @@
 {% endblock %}
 
 {% block main %}
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
 <div class="container">
+    <div id="chartData" style="display:block;">
+        {% for i in cash_history %} 
+                {{i.cash}}
+            {% endfor %}
+    </div>
     <img src="../static/images/history.svg" class="background">
     <h1>History</h1>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Cash
+    </button>
+  
+  <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Cash History</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <canvas id="myChart" style="width:100%;max-width:800px"></canvas>
+
+            
+            <script>
+                let txtt = document.getElementById('chartData').innerText;
+                txtt = txtt.replace(/  +/g, ' ').trim();
+                let yValues = txtt.split(' ').map(Number);
+                let xValues = [];
+                for(let i = 0 ; i < yValues.length ; i ++) xValues.push(i);
+                
+                new Chart("myChart", {
+                    type: "line",
+                    data: {
+                    labels: xValues,
+                    datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: yValues
+                    }]
+                    },
+                    options: {
+                    legend: {display: false},
+                    scales: {
+                        yAxes: [{ticks: {min:  Math.min.apply(Math, yValues) -10, max: Math.max.apply(Math, yValues) + 10}}],
+                    }
+                    }
+                });
+            </script>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
     <table class="table table-hover table-md-responsive">
         <tr class="thead-light">
             <th scope="col">Stocks</th>
